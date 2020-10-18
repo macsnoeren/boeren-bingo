@@ -7,6 +7,9 @@ bingo master. The bingo master gives randomly numbers from 1 to 20. The players 
 all these five numbers have been given, BINGO is yelled.
 
 During family time, we wanted that everyone be a player. Therefore, we searched the Internet for online bingo
-games. Unfortunately, no online games suited. Therefore, we have written one our selve.
+games. Unfortunately, no online games suited. Therefore, we have written one ourselve. We have selected Phaser
+as web game framework (https://phaser.io/). Still learning and creating a game is not easy!
+
+Live: https://vmacman.jmnl.nl/bingo
 
 -- Noortje, Lieve and Maurice
