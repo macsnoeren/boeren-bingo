@@ -10,4 +10,6 @@ During family time, we wanted that everyone be a player. Therefore, we searched 
 games. Unfortunately, no online games suited. Therefore, we have written one ourselve. We have selected Phaser
 as web game framework (https://phaser.io/). Still learning and creating a game is not easy!
 
+Live: https://vmacman.jmnl.nl/bingo
+
 -- Noortje, Lieve and Maurice
