@@ -32,6 +32,8 @@ var state            = 0;
 var tween            = null;
 var ballSelected     = null;
 var textSelectedBall = null;
+var numbersSound     = [];
+var rolledBallItems  = [];
 
 // Configuration of the Phaser Game Object
 var config = {
@@ -83,6 +85,10 @@ var cage = new Phaser.Geom.Rectangle(width/2-width/8, height/2-height/3, 2*width
 
 // Preload function belonging to the Phaser framework
 function preload () {
+    if ( totalBalls > 100 ) { // No more than 100 balls
+	totalBalls = 100;
+    }
+    
     // Loading the font
     this.load.bitmapFont('desyrel', 'images/desyrel.png', 'images/desyrel.xml');
 
@@ -102,6 +108,10 @@ function preload () {
         'sounds/drop.ogg',
         'sounds/drop.mp3'
     ]);
+
+    for ( var i=1; i <= totalBalls; i++ ) {
+	this.load.audio('number'+i, ['sounds/'+i+'.mp3']);
+    }
 }
 
 // Create function belonging to the Phaser framework
@@ -156,6 +166,11 @@ function create () {
 	console.log('ready');
     });
 
+    numbersSound = [];
+    for ( var i=1; i <= totalBalls; i++ ) {
+	numbersSound.push( this.sound.add('number'+i) );
+    }
+
     // Create the button for full screen
     var button = this.add.image(width-16, 16, 'fullscreen', 0).setOrigin(1, 0).setInteractive();
     button.on('pointerup', function () {
@@ -180,8 +195,7 @@ function create () {
     
     var buttonBingo = this.add.image(width/2-(150/scaleRatio), cage.y+cage.height+(50/scaleRatio), 'buttonBingo').setScale(0.5/scaleRatio).setInteractive();    
     buttonBingo.on('pointerup',function(pointer) {
-	//??!
-	//showBall();
+	restartGame();
 	autoplay = false;
     });
 
@@ -212,6 +226,15 @@ function create () {
     textSelectedBall = this.add.text(width/2, height/2, "12", style).setOrigin(0.5);
     textSelectedBall.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
     textSelectedBall.setAlpha(0);
+}
+
+// Restart the game, all balls are removed and the game starts rolling again from the beginning.
+function restartGame () {
+    for ( var i=0; i < rolledBallItems.length; i++ ) {
+	rolledBallItems[i].destroy();
+    }
+    rolledBallItems = [];
+    rolled          = [];
 }
 
 // Get the new number from the number generator. The function pushes the rolled number
@@ -258,7 +281,9 @@ function stopCage () {
 
 function showBall () {
     if (  rolled.length < totalBalls ) {
-	textSelectedBall.text = getNumber();
+	var number = getNumber();
+	textSelectedBall.text = number
+	numbersSound[number-1].play();
 	textSelectedBall.setAlpha(0);
 	tweenShow.play();
 	tweenShow.restart();
@@ -282,10 +307,14 @@ function addRolledBall () {
 	var number = rolled[rolled.length-1];
 	x = cage.x + cage.width + 100/scaleRatio + ((number-1) % 10)*50/scaleRatio;
 	y = parseInt((number-1) / 10)*50/scaleRatio + cage.y;
-	game.scene.scenes[0].add.image(x, y, 'ball').setScale(0.5/scaleRatio);
+	var _ball = game.scene.scenes[0].add.image(x, y, 'ball');
+	rolledBallItems.push( _ball );
+	_ball.setScale(0.5/scaleRatio);
 	var fontSize = 30/scaleRatio;
 	var style = { font: "bold " + fontSize + "px Arial", fill: "#F00", boundsAlignH: "center", boundsAlignV: "middle" };
-	game.scene.scenes[0].add.text(x, y, number, style).setOrigin(0.5);
+	var _text = game.scene.scenes[0].add.text(x, y, number, style);
+	rolledBallItems.push( _text );
+	_text.setOrigin(0.5);
     }
 
     if ( rolled.length == totalBalls ) {
