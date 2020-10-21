@@ -12,4 +12,4 @@ as web game framework (https://phaser.io/). Still learning and creating a game i
 
 Live: https://vmacman.jmnl.nl/bingo
 
--- Noortje, Lieve and Maurice
+-- Maurice
