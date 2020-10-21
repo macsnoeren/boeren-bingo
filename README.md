@@ -12,4 +12,6 @@ as web game framework (https://phaser.io/). Still learning and creating a game i
 
 Live: https://vmacman.jmnl.nl/bingo
 
+Note for software developers: The software can be used, the voice sound files not! You can record your own voice :).
+
 -- Maurice
