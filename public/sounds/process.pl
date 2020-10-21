@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+# Convert all the wav sound files to mp3 using lame
+
 use strict;
 use warnings;
 
