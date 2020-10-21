@@ -78,10 +78,16 @@ var config = {
 };
 
 // Game object of the Phaser framework
-var game = new Phaser.Game(config);
+var game = null;
 
 // The cage where the balls will be in
 var cage = new Phaser.Geom.Rectangle(width/2-width/8, height/2-height/3, 2*width/8, 2*height/3);
+
+function startGame ( _totalBalls ) {
+    totalBalls = _totalBalls;
+    console.log("totalBalls: " + totalBalls);
+    game = new Phaser.Game(config);
+}
 
 // Preload function belonging to the Phaser framework
 function preload () {
@@ -98,6 +104,7 @@ function preload () {
     this.load.spritesheet('fullscreen', 'images/fullscreen.png', { frameWidth: 64, frameHeight: 64 });
     this.load.image('buttonRoll', 'images/button_roll.png');
     this.load.image('buttonBingo', 'images/button_bingo.png');
+    this.load.image('buttonAgain', 'images/button_again.png');
 
     // Sound files
     this.load.audio('roll', [
@@ -187,14 +194,28 @@ function create () {
     }, this);
 
     // Create the buttons
-    var buttonRoll = this.add.image(width/2+(150/scaleRatio), cage.y+cage.height+(50/scaleRatio), 'buttonRoll').setScale(0.5/scaleRatio).setInteractive();    
+    var buttonRoll, buttonBingo, buttonAgain, buttonStop;
+    
+    buttonRoll = this.add.image(width/2+(150/scaleRatio), cage.y+cage.height+(50/scaleRatio), 'buttonRoll').setScale(0.5/scaleRatio).setInteractive();    
     buttonRoll.on('pointerup',function(pointer) {
+	autoplay = true;
 	rollSound.play();
 	startCage();
+	buttonRoll.visible = false;
+	buttonBingo.visible = true;
     });
     
-    var buttonBingo = this.add.image(width/2-(150/scaleRatio), cage.y+cage.height+(50/scaleRatio), 'buttonBingo').setScale(0.5/scaleRatio).setInteractive();    
+    buttonBingo = this.add.image(width/2+(150/scaleRatio), cage.y+cage.height+(50/scaleRatio), 'buttonBingo').setScale(0.5/scaleRatio).setInteractive();
+    buttonBingo.visible = false;
     buttonBingo.on('pointerup',function(pointer) {
+	autoplay = false;	
+	buttonRoll.visible = true;
+	buttonBingo.visible = false;
+    });
+
+    buttonAgain = this.add.image(width/2-(150/scaleRatio), cage.y+cage.height+(50/scaleRatio), 'buttonAgain').setScale(0.5/scaleRatio).setInteractive();
+    buttonAgain.visible = true;
+    buttonAgain.on('pointerup',function(pointer) {
 	restartGame();
 	autoplay = false;
     });
@@ -277,7 +298,6 @@ function stopCage () {
 	ball.setBounce(0.2, 0.2);
     });
 }
-
 
 function showBall () {
     if (  rolled.length < totalBalls ) {
